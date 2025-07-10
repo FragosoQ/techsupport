@@ -1,315 +1,489 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Resumo - Dashboard</title>
-<style>
-  /* Reset simples */
-  * {
-    box-sizing: border-box;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard SGQA</title>
+ <style>
+ html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+    background: url("https://static.wixstatic.com/media/a6967f_efae408b13fd46be84bf781ea591078b~mv2.jpg") no-repeat center center fixed;
+  background-size: contain; /* mantém proporção sem esticar */
 
-  body {
-    margin: 0;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background: #000;
-    color: #eee;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-  }
+  font-family: "Segoe UI", sans-serif;
+  color: #fff;
+  overflow: hidden;
+  position: relative;
+}
 
-  header {
-    text-align: center;
-    padding: 15px 10px;
-    font-weight: 700;
-    font-size: 1.3rem;
-    border-bottom: 1px solid #333;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-  }
+body::before {
+  content: "";
+  background: url("https://static.wixstatic.com/media/a6967f_efae408b13fd46be84bf781ea591078b~mv2.jpg") no-repeat center center fixed;
+  background-size: cover;
+  opacity: 0.15;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  z-index: -1;
+}
 
-  .status-counter {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 600;
-  }
-  .status-ball {
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-  }
-  .aberto { background: #f4d35e; }
-  .resolvido { background: #4caf50; }
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 1px solid #333;
+}
 
-  .container-wrapper {
-    flex: 1;
-    display: flex;
-    gap: 20px;
-    padding: 20px;
-  }
+.logo {
+  height: 40px;
+}
 
-  .container {
-    flex: 1;
-    background: #121212;
-    border-radius: 8px;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
+.datetime {
+  font-size: 0.95rem;
+}
 
-  h2 {
-    margin: 0 0 15px 0;
-    font-weight: 700;
-    font-size: 1.25rem;
-    border-bottom: 1px solid #333;
-    padding-bottom: 5px;
-  }
+.status-counter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  font-weight: bold;
+  font-size: 1rem;
+}
 
-  .filters {
-    margin-bottom: 10px;
-  }
+.status-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
 
-  select {
-    background: #222;
-    border: 1px solid #444;
-    color: #eee;
-    padding: 6px 8px;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    cursor: pointer;
-  }
+.status-ball {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9rem;
-  }
+.aberto { background: rgba(255, 215, 0, 0.9); }
+.resolvido { background: rgba(0, 128, 0, 0.9); }
 
-  th, td {
-    border: 1px solid #222;
-    padding: 6px 8px;
-    text-align: left;
-    vertical-align: middle;
-  }
+.main {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 60px);
+}
 
-  th {
-    background: #1a1a1a;
-    font-weight: 600;
-  }
+.half {
+  flex: 1;
+  padding: 15px;
+  background-color: rgba(18, 18, 18, 0.7); /* fundo com transparência */
+  color: #fff; /* texto branco */
+  overflow-y: auto;
+}
 
-  td select {
-    width: 100%;
-    background: #222;
-    border: none;
-    color: #eee;
-    font-weight: 600;
-  }
+#resumo-dia {
+  flex: 3; /* 60% */
+}
 
-  /* Scroll interno para tabelas */
-  .table-container {
-    flex: 1;
-    overflow-y: auto;
-  }
-</style>
+#inputs {
+  flex: 2; /* 40% */
+}
+
+h2 {
+  margin-top: 0;
+  border-bottom: 1px solid #444;
+  padding-bottom: 5px;
+}
+
+.filters {
+  margin-bottom: 10px;
+}
+
+/* Novo container flex para filtros com inputs e selects lado a lado */
+.filters label {
+  display: inline-flex;
+  flex-direction: column;
+  margin-right: 15px;
+  font-size: 0.85rem;
+  min-width: 90px;
+}
+
+.filters input[type="text"],
+.filters input[type="date"],
+.filters input[type="time"],
+.filters select {
+  background: #111;
+  color: #fff;
+  border: 1px solid #444;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  width: 120px;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.filters input[type="text"]:focus,
+.filters input[type="date"]:focus,
+.filters input[type="time"]:focus,
+.filters select:focus {
+  border-color: #ffd700;
+  outline: none;
+}
+
+select {
+  background: #222;
+  color: #fff;
+  border: 1px solid #444;
+  padding: 5px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+th, td {
+  border: 1px solid #333;
+  padding: 5px;
+  text-align: left;
+}
+
+th {
+  background-color: #1e1e1e;
+}
+
+td select {
+  background: #222;
+  color: #fff;
+  border: none;
+  width: 100%;
+}
+
+.status-filter-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.status-btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.status-btn:hover {
+  transform: scale(1.05);
+}
+
+.status-btn.aberto {
+  background-color: rgba(255, 255, 0, 0.5);
+}
+
+.status-btn.resolvido {
+  background-color: rgba(0, 255, 0, 0.5);
+}
+
+.column-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.column-filters input {
+  background: #111;
+  color: #fff;
+  border: 1px solid #444;
+  padding: 4px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.status-aberto {
+  color: rgba(255, 255, 0, 0.5); /* amarelo neon opacidade 0.5 */
+  font-weight: bold;
+}
+
+.status-resolvido {
+  color: rgba(0, 255, 0, 0.5); /* verde neon opacidade 0.5 */
+  font-weight: bold;
+}
+
+#resumo-dia,
+#inputs {
+  opacity: 0.9;
+}
+
+ </style>
 </head>
 <body>
 
 <header>
+  <img src="https://static.wixstatic.com/media/a6967f_982db5e228854134b613cf1ffab4708d~mv2.png" alt="logo" class="logo" />
   <div class="status-counter">
-    <div class="status-ball aberto"></div><span id="abertos-count">0</span>
+    <div class="status-group">
+      <div class="status-ball aberto"></div> <span id="abertos-count">0</span>
+    </div>
+    <div class="status-group">
+      <div class="status-ball resolvido"></div> <span id="resolvidos-count">0</span>
+    </div>
   </div>
-  <div class="status-counter">
-    <div class="status-ball resolvido"></div><span id="resolvidos-count">0</span>
-  </div>
+  <div class="datetime" id="datetime"></div>
 </header>
 
-<div class="container-wrapper">
-  <section id="container1" class="container">
-    <h2>Folha3</h2>
+<div class="main">
+  <section class="half" id="resumo-dia">
+    <h2>Resumo Dia</h2>
     <div class="filters">
-      <label>Status: 
-        <select id="filter-status-1">
+      <label>ID:
+        <input type="text" id="filter-id-resumo" placeholder="Filtrar ID" />
+      </label>
+      <label>name:
+        <input type="text" id="filter-name-resumo" placeholder="Filtrar name" />
+      </label>
+      <label>RESUMO:
+        <input type="text" id="filter-resumo-resumo" placeholder="Filtrar RESUMO" />
+      </label>
+      <label>data:
+        <input type="date" id="filter-data-resumo" />
+      </label>
+     
+      <label>Status:
+        <select id="filter-status-resumo">
           <option value="">Todos</option>
           <option value="Aberto">Aberto</option>
           <option value="Resolvido">Resolvido</option>
         </select>
       </label>
+      <label>contacto:
+        <input type="text" id="filter-contacto-resumo" placeholder="Filtrar contacto" />
+      </label>
+      <label>ID_KEYWORD:
+        <input type="text" id="filter-id_keyword-resumo" placeholder="Filtrar ID_KEYWORD" />
+      </label>
     </div>
-    <div class="table-container">
-      <table id="table1">
-        <thead>
-          <tr>
-            <th>ID</th><th>name</th><th>RESUMO</th><th>data</th><th>hora</th><th>status</th><th>contacto</th><th>keyword</th><th>ID_KEYWORD</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th><th>name</th><th>RESUMO</th><th>data</th><th>hora</th><th>status</th><th>contacto</th><th>ID_KEYWORD</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-resumo"></tbody>
+    </table>
   </section>
 
-  <section id="container2" class="container">
-    <h2>resumo_dia</h2>
-    <div class="filters">
-      <label>Status: 
-        <select id="filter-status-2">
-          <option value="">Todos</option>
-          <option value="Aberto">Aberto</option>
-          <option value="Resolvido">Resolvido</option>
-        </select>
-      </label>
-    </div>
-    <div class="table-container">
-      <table id="table2">
-        <thead>
-          <tr>
-            <th>ID</th><th>name</th><th>RESUMO</th><th>data</th><th>hora</th><th>status</th><th>contacto</th><th>ID_KEYWORD</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </section>
+ <section class="half" id="inputs">
+  <h2>Inputs</h2>
+  <div class="filters">
+    <label>ID:
+      <input type="text" id="filter-id-inputs" placeholder="Filtrar ID" />
+    </label>
+    <label>name:
+      <input type="text" id="filter-name-inputs" placeholder="Filtrar name" />
+    </label>
+    <label>RESUMO:
+      <input type="text" id="filter-resumo-inputs" placeholder="Filtrar RESUMO" />
+    </label>
+    <label>data:
+      <input type="date" id="filter-data-inputs" />
+    </label>
+   
+    <label>Status:
+      <select id="filter-status-inputs">
+        <option value="">Todos</option>
+        <option value="Aberto">Aberto</option>
+        <option value="Resolvido">Resolvido</option>
+      </select>
+    </label>
+    <label>contacto:
+      <input type="text" id="filter-contacto-inputs" placeholder="Filtrar contacto" />
+    </label>
+    <label>keyword:
+      <input type="text" id="filter-keyword-inputs" placeholder="Filtrar keyword" />
+    </label>
+    <label>ID_KEYWORD:
+      <input type="text" id="filter-id_keyword-inputs" placeholder="Filtrar ID_KEYWORD" />
+    </label>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th><th>name</th><th>RESUMO</th><th>data</th><th>hora</th><th>status</th><th>contacto</th><th>keyword</th><th>ID_KEYWORD</th>
+      </tr>
+    </thead>
+    <tbody id="tbody-inputs"></tbody>
+  </table>
+</section>
+
+ 
 </div>
 
 <script>
-  const SHEET_ID = '1VWRHITYxqbnW2nwzfM9nO6w61LpWpySViy3FzOugOlE';
-  const FOLHA3 = 'Folha3';
-  const RESUMO_DIA = 'resumo_dia';
+const SHEET_ID = '1VWRHITYxqbnW2nwzfM9nO6w61LpWpySViy3FzOugOlE';
+const FOLHA3 = 'Folha3';
+const RESUMO_DIA = 'resumo_dia';
 
-  // URLs da API pública JSON do Google Sheets
-  // O Google Sheets precisa estar público e habilitar "Publicar na web" para funcionar
-  // URL base: https://docs.google.com/spreadsheets/d/<SHEET_ID>/gviz/tq?tqx=out:json&sheet=<sheetname>
-
-  function fetchSheet(sheetName) {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
-    return fetch(url)
-      .then(res => res.text())
-      .then(data => {
-        // A resposta tem um prefixo, limpar para JSON
-        const jsonData = JSON.parse(data.substr(47).slice(0, -2));
-        const cols = jsonData.table.cols.map(c => c.label);
-        const rows = jsonData.table.rows.map(r => {
-          const obj = {};
-          r.c.forEach((cell, i) => {
-            obj[cols[i]] = cell ? cell.v : '';
-          });
-          return obj;
+function fetchSheet(sheetName) {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
+  return fetch(url)
+    .then(res => res.text())
+    .then(data => {
+      const jsonData = JSON.parse(data.substr(47).slice(0, -2));
+      const cols = jsonData.table.cols.map(c => c.label);
+      const rows = jsonData.table.rows.map(r => {
+        const obj = {};
+        r.c.forEach((cell, i) => {
+          obj[cols[i]] = cell ? cell.v : '';
         });
-        return rows;
+        return obj;
       });
-  }
+      return rows;
+    });
+}
 
-  function renderTable1(data) {
-    const tbody = document.querySelector('#table1 tbody');
-    tbody.innerHTML = '';
-    data.forEach(row => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
+function renderResumo(data) {
+  const tbody = document.getElementById('tbody-resumo');
+  tbody.innerHTML = '';
+  data.forEach(row => {
+    const statusClass = row.status.toLowerCase() === 'aberto' ? 'status-aberto' :
+                        row.status.toLowerCase() === 'resolvido' ? 'status-resolvido' : '';
+    tbody.innerHTML += `
+      <tr>
         <td>${row.ID}</td>
         <td>${row.name}</td>
         <td>${row.RESUMO}</td>
         <td>${row.data}</td>
         <td>${row.hora}</td>
-        <td>${row.status}</td>
+        <td><span class="${statusClass}">${row.status}</span></td>
+        <td>${row.contacto}</td>
+        <td>${row.ID_KEYWORD}</td>
+      </tr>`;
+  });
+}
+
+function renderInputs(data) {
+  const tbody = document.getElementById('tbody-inputs');
+  tbody.innerHTML = '';
+  data.forEach(row => {
+    const statusClass = row.status.toLowerCase() === 'aberto' ? 'status-aberto' :
+                        row.status.toLowerCase() === 'resolvido' ? 'status-resolvido' : '';
+    tbody.innerHTML += `
+      <tr>
+        <td>${row.ID}</td>
+        <td>${row.name}</td>
+        <td>${row.RESUMO}</td>
+        <td>${row.data}</td>
+        <td>${row.hora}</td>
+        <td><span class="${statusClass}">${row.status}</span></td>
         <td>${row.contacto}</td>
         <td>${row.keyword}</td>
         <td>${row.ID_KEYWORD}</td>
-      `;
-      tbody.appendChild(tr);
-    });
-  }
+      </tr>`;
+  });
+}
 
-  function renderTable2(data) {
-    const tbody = document.querySelector('#table2 tbody');
-    tbody.innerHTML = '';
-    data.forEach(row => {
-      const tr = document.createElement('tr');
+function updateCounters(data) {
+  const abertos = data.filter(r => r.status.toLowerCase() === 'aberto').length;
+  const resolvidos = data.filter(r => r.status.toLowerCase() === 'resolvido').length;
+  document.getElementById('abertos-count').textContent = abertos;
+  document.getElementById('resolvidos-count').textContent = resolvidos;
+}
 
-      tr.innerHTML = `
-        <td>${row.ID}</td>
-        <td>${row.name}</td>
-        <td>${row.RESUMO}</td>
-        <td>${row.data}</td>
-        <td>${row.hora}</td>
-        <td>
-          <select class="status-edit">
-            <option value="Aberto" ${row.status === 'Aberto' ? 'selected' : ''}>Aberto</option>
-            <option value="Resolvido" ${row.status === 'Resolvido' ? 'selected' : ''}>Resolvido</option>
-          </select>
-        </td>
-        <td>${row.contacto}</td>
-        <td>${row.ID_KEYWORD}</td>
-      `;
-      tbody.appendChild(tr);
-    });
-  }
+let folha3Data = [];
+let resumoDiaData = [];
 
-  function updateResumoDiaCounts(data) {
-    const abertoCount = data.filter(d => d.status === 'Aberto').length;
-    const resolvidoCount = data.filter(d => d.status === 'Resolvido').length;
-    document.getElementById('abertos-count').textContent = abertoCount;
-    document.getElementById('resolvidos-count').textContent = resolvidoCount;
-  }
+function applyFiltersResumo() {
+  const filtroStatusResumo = document.getElementById('filter-status-resumo').value.trim().toLowerCase();
+  const filtroID = document.getElementById('filter-id-resumo').value.trim().toLowerCase();
+  const filtroName = document.getElementById('filter-name-resumo').value.trim().toLowerCase();
+  const filtroResumo = document.getElementById('filter-resumo-resumo').value.trim().toLowerCase();
+  const filtroData = document.getElementById('filter-data-resumo').value;
+  const filtroContacto = document.getElementById('filter-contacto-resumo').value.trim().toLowerCase();
+  const filtroIDKeyword = document.getElementById('filter-id_keyword-resumo').value.trim().toLowerCase();
 
-  let folha3Data = [];
-  let resumoDiaData = [];
-
-  // Filtrar e renderizar
-  function filterAndRender() {
-    const filterStatus1 = document.getElementById('filter-status-1').value;
-    const filterStatus2 = document.getElementById('filter-status-2').value;
-
-    let filtered1 = folha3Data;
-    if (filterStatus1) {
-      filtered1 = folha3Data.filter(r => r.status === filterStatus1);
-    }
-    renderTable1(filtered1);
-
-    let filtered2 = resumoDiaData;
-    if (filterStatus2) {
-      filtered2 = resumoDiaData.filter(r => r.status === filterStatus2);
-    }
-    renderTable2(filtered2);
-
-    updateResumoDiaCounts(resumoDiaData);
-  }
-
-  // Ao alterar filtro, atualizar tabelas
-  document.getElementById('filter-status-1').addEventListener('change', filterAndRender);
-  document.getElementById('filter-status-2').addEventListener('change', filterAndRender);
-
-  // Ouvir edição de status na tabela 2
-  document.querySelector('#table2 tbody').addEventListener('change', e => {
-    if (e.target.classList.contains('status-edit')) {
-      const tr = e.target.closest('tr');
-      const id = tr.children[0].textContent;
-      const newStatus = e.target.value;
-
-      // Atualiza o array de dados local
-      const row = resumoDiaData.find(r => r.ID === id);
-      if (row) {
-        row.status = newStatus;
-        updateResumoDiaCounts(resumoDiaData);
-      }
-    }
+  const resumoFiltrado = resumoDiaData.filter(r => {
+    if (filtroStatusResumo && r.status.toLowerCase() !== filtroStatusResumo) return false;
+    if (filtroID && !String(r.ID).toLowerCase().includes(filtroID)) return false;
+    if (filtroName && !r.name.toLowerCase().includes(filtroName)) return false;
+    if (filtroResumo && !r.RESUMO.toLowerCase().includes(filtroResumo)) return false;
+    if (filtroData && r.data !== filtroData) return false;
+    if (filtroContacto && !r.contacto.toLowerCase().includes(filtroContacto)) return false;
+    if (filtroIDKeyword && !r.ID_KEYWORD.toLowerCase().includes(filtroIDKeyword)) return false;
+    return true;
   });
 
-  // Inicialização: carregar dados e renderizar
-  Promise.all([fetchSheet(FOLHA3), fetchSheet(RESUMO_DIA)])
-    .then(([data1, data2]) => {
-      folha3Data = data1;
-      resumoDiaData = data2;
-      filterAndRender();
-    })
-    .catch(err => {
-      console.error('Erro ao carregar dados do Google Sheets:', err);
-    });
+  renderResumo(resumoFiltrado);
+  updateCounters(resumoDiaData);
+}
+
+function applyFiltersInputs() {
+  const filtroStatusInputs = document.getElementById('filter-status-inputs').value.trim().toLowerCase();
+  const filtroID = document.getElementById('filter-id-inputs').value.trim().toLowerCase();
+  const filtroName = document.getElementById('filter-name-inputs').value.trim().toLowerCase();
+  const filtroResumo = document.getElementById('filter-resumo-inputs').value.trim().toLowerCase();
+  const filtroData = document.getElementById('filter-data-inputs').value;
+  const filtroContacto = document.getElementById('filter-contacto-inputs').value.trim().toLowerCase();
+  const filtroKeyword = document.getElementById('filter-keyword-inputs').value.trim().toLowerCase();
+  const filtroIDKeyword = document.getElementById('filter-id_keyword-inputs').value.trim().toLowerCase();
+
+  const inputsFiltrado = folha3Data.filter(r => {
+    if (filtroStatusInputs && r.status.toLowerCase() !== filtroStatusInputs) return false;
+    if (filtroID && !String(r.ID).toLowerCase().includes(filtroID)) return false;
+    if (filtroName && !r.name.toLowerCase().includes(filtroName)) return false;
+    if (filtroResumo && !r.RESUMO.toLowerCase().includes(filtroResumo)) return false;
+    if (filtroData && r.data !== filtroData) return false;
+    if (filtroContacto && !r.contacto.toLowerCase().includes(filtroContacto)) return false;
+    if (filtroKeyword && !r.keyword.toLowerCase().includes(filtroKeyword)) return false;
+    if (filtroIDKeyword && !r.ID_KEYWORD.toLowerCase().includes(filtroIDKeyword)) return false;
+    return true;
+  });
+
+  renderInputs(inputsFiltrado);
+}
+
+// Eventos dos filtros Resumo Dia
+['filter-status-resumo', 'filter-id-resumo', 'filter-name-resumo', 'filter-resumo-resumo', 'filter-data-resumo', 'filter-contacto-resumo', 'filter-id_keyword-resumo']
+.forEach(id => {
+  const el = document.getElementById(id);
+  if(el) el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', applyFiltersResumo);
+});
+
+// Eventos dos filtros Inputs
+['filter-status-inputs', 'filter-id-inputs', 'filter-name-inputs', 'filter-resumo-inputs', 'filter-data-inputs', 'filter-contacto-inputs', 'filter-keyword-inputs', 'filter-id_keyword-inputs']
+.forEach(id => {
+  const el = document.getElementById(id);
+  if(el) el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', applyFiltersInputs);
+});
+
+Promise.all([fetchSheet(FOLHA3), fetchSheet(RESUMO_DIA)])
+  .then(([dadosInputs, dadosResumo]) => {
+    folha3Data = dadosInputs;
+    resumoDiaData = dadosResumo;
+    applyFiltersResumo();
+    applyFiltersInputs();
+  });
+
+// Atualizar data e hora em tempo real
+function updateDateTime() {
+  const now = new Date();
+  document.getElementById('datetime').textContent = now.toLocaleString('pt-PT');
+}
+updateDateTime();
+setInterval(updateDateTime, 1000);
+
 </script>
 
 </body>
