@@ -10,7 +10,7 @@
   padding: 0;
   height: 100%;
     background: url("https://static.wixstatic.com/media/a6967f_efae408b13fd46be84bf781ea591078b~mv2.jpg") no-repeat center center fixed;
-  background-size: contain; /* mantém proporção sem esticar */
+  background-size: cover; /* mantém proporção sem esticar */
 
   font-family: "Segoe UI", sans-serif;
   color: #fff;
@@ -18,16 +18,21 @@
   position: relative;
 }
 
+body, html {
+  margin: 0;
+  height: 100%;
+  overflow-x: hidden;
+}
+
 body::before {
   content: "";
-  background: url("https://static.wixstatic.com/media/a6967f_efae408b13fd46be84bf781ea591078b~mv2.jpg") no-repeat center center fixed;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("https://static.wixstatic.com/media/a6967f_efae408b13fd46be84bf781ea591078b~mv2.jpg");
+  background-repeat: no-repeat;
+  background-position: center center;
   background-size: cover;
   opacity: 0.15;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  position: absolute;
   z-index: -1;
 }
 
@@ -213,19 +218,35 @@ td select {
 }
 
 .status-aberto {
-  color: rgba(255, 255, 0, 0.5); /* amarelo neon opacidade 0.5 */
+  color: rgba(255, 255, 0, 0.7); /* amarelo menos opaco */
   font-weight: bold;
+  text-shadow:
+    0 0 3px rgba(255, 255, 0, 0.7),
+    0 0 6px rgba(255, 255, 0, 0.5);
 }
 
 .status-resolvido {
-  color: rgba(0, 255, 0, 0.5); /* verde neon opacidade 0.5 */
+  color: rgba(0, 255, 0, 0.7); /* menos opaco */
   font-weight: bold;
+  text-shadow:
+    0 0 3px rgba(0, 255, 0, 0.7),
+    0 0 6px rgba(0, 255, 0, 0.5);
 }
 
 #resumo-dia,
 #inputs {
   opacity: 0.9;
 }
+
+.divider {
+  height: 1px;
+  background-color: white;
+  margin: 0 40px;
+  width: calc(100% - 80px);
+  align-self: center; /* centraliza na direção do container flex */
+  opacity: 0.8; /* opcional para suavizar */
+}
+
 
  </style>
 </head>
@@ -284,6 +305,10 @@ td select {
       <tbody id="tbody-resumo"></tbody>
     </table>
   </section>
+  
+<br>
+<div class="divider"></div>
+
 
  <section class="half" id="inputs">
   <h2>Inputs</h2>
