@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Resumo - Dashboard</title>
+<style>
+  /* Reset simples */
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #000;
+    color: #eee;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  header {
+    text-align: center;
+    padding: 15px 10px;
+    font-weight: 700;
+    font-size: 1.3rem;
+    border-bottom: 1px solid #333;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .status-counter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+  }
+  .status-ball {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+  }
+  .aberto { background: #f4d35e; }
+  .resolvido { background: #4caf50; }
+
+  .container-wrapper {
+    flex: 1;
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .container {
+    flex: 1;
+    background: #121212;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  h2 {
+    margin: 0 0 15px 0;
+    font-weight: 700;
+    font-size: 1.25rem;
+    border-bottom: 1px solid #333;
+    padding-bottom: 5px;
+  }
+
+  .filters {
+    margin-bottom: 10px;
+  }
+
+  select {
+    background: #222;
+    border: 1px solid #444;
+    color: #eee;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  th, td {
+    border: 1px solid #222;
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  th {
+    background: #1a1a1a;
+    font-weight: 600;
+  }
+
+  td select {
+    width: 100%;
+    background: #222;
+    border: none;
+    color: #eee;
+    font-weight: 600;
+  }
+
+  /* Scroll interno para tabelas */
+  .table-container {
+    flex: 1;
+    overflow-y: auto;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="status-counter">
+    <div class="status-ball aberto"></div><span id="abertos-count">0</span>
+  </div>
+  <div class="status-counter">
+    <div class="status-ball resolvido"></div><span id="resolvidos-count">0</span>
+  </div>
+</header>
+
+<div class="container-wrapper">
+  <section id="container1" class="container">
+    <h2>Folha3</h2>
+    <div class="filters">
+      <label>Status: 
+        <select id="filter-status-1">
+          <option value="">Todos</option>
+          <option value="Aberto">Aberto</option>
+          <option value="Resolvido">Resolvido</option>
+        </select>
+      </label>
+    </div>
+    <div class="table-container">
+      <table id="table1">
+        <thead>
+          <tr>
+            <th>ID</th><th>name</th><th>RESUMO</th><th>data</th><th>hora</th><th>status</th><th>contacto</th><th>keyword</th><th>ID_KEYWORD</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="container2" class="container">
+    <h2>resumo_dia</h2>
+    <div class="filters">
+      <label>Status: 
+        <select id="filter-status-2">
+          <option value="">Todos</option>
+          <option value="Aberto">Aberto</option>
+          <option value="Resolvido">Resolvido</option>
+        </select>
+      </label>
+    </div>
+    <div class="table-container">
+      <table id="table2">
+        <thead>
+          <tr>
+            <th>ID</th><th>name</th><th>RESUMO</th><th>data</th><th>hora</th><th>status</th><th>contacto</th><th>ID_KEYWORD</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script>
+  const SHEET_ID = '1VWRHITYxqbnW2nwzfM9nO6w61LpWpySViy3FzOugOlE';
+  const FOLHA3 = 'Folha3';
+  const RESUMO_DIA = 'resumo_dia';
+
+  // URLs da API pública JSON do Google Sheets
+  // O Google Sheets precisa estar público e habilitar "Publicar na web" para funcionar
+  // URL base: https://docs.google.com/spreadsheets/d/<SHEET_ID>/gviz/tq?tqx=out:json&sheet=<sheetname>
+
+  function fetchSheet(sheetName) {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
+    return fetch(url)
+      .then(res => res.text())
+      .then(data => {
+        // A resposta tem um prefixo, limpar para JSON
+        const jsonData = JSON.parse(data.substr(47).slice(0, -2));
+        const cols = jsonData.table.cols.map(c => c.label);
+        const rows = jsonData.table.rows.map(r => {
+          const obj = {};
+          r.c.forEach((cell, i) => {
+            obj[cols[i]] = cell ? cell.v : '';
+          });
+          return obj;
+        });
+        return rows;
+      });
+  }
+
+  function renderTable1(data) {
+    const tbody = document.querySelector('#table1 tbody');
+    tbody.innerHTML = '';
+    data.forEach(row => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${row.ID}</td>
+        <td>${row.name}</td>
+        <td>${row.RESUMO}</td>
+        <td>${row.data}</td>
+        <td>${row.hora}</td>
+        <td>${row.status}</td>
+        <td>${row.contacto}</td>
+        <td>${row.keyword}</td>
+        <td>${row.ID_KEYWORD}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function renderTable2(data) {
+    const tbody = document.querySelector('#table2 tbody');
+    tbody.innerHTML = '';
+    data.forEach(row => {
+      const tr = document.createElement('tr');
+
+      tr.innerHTML = `
+        <td>${row.ID}</td>
+        <td>${row.name}</td>
+        <td>${row.RESUMO}</td>
+        <td>${row.data}</td>
+        <td>${row.hora}</td>
+        <td>
+          <select class="status-edit">
+            <option value="Aberto" ${row.status === 'Aberto' ? 'selected' : ''}>Aberto</option>
+            <option value="Resolvido" ${row.status === 'Resolvido' ? 'selected' : ''}>Resolvido</option>
+          </select>
+        </td>
+        <td>${row.contacto}</td>
+        <td>${row.ID_KEYWORD}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function updateResumoDiaCounts(data) {
+    const abertoCount = data.filter(d => d.status === 'Aberto').length;
+    const resolvidoCount = data.filter(d => d.status === 'Resolvido').length;
+    document.getElementById('abertos-count').textContent = abertoCount;
+    document.getElementById('resolvidos-count').textContent = resolvidoCount;
+  }
+
+  let folha3Data = [];
+  let resumoDiaData = [];
+
+  // Filtrar e renderizar
+  function filterAndRender() {
+    const filterStatus1 = document.getElementById('filter-status-1').value;
+    const filterStatus2 = document.getElementById('filter-status-2').value;
+
+    let filtered1 = folha3Data;
+    if (filterStatus1) {
+      filtered1 = folha3Data.filter(r => r.status === filterStatus1);
+    }
+    renderTable1(filtered1);
+
+    let filtered2 = resumoDiaData;
+    if (filterStatus2) {
+      filtered2 = resumoDiaData.filter(r => r.status === filterStatus2);
+    }
+    renderTable2(filtered2);
+
+    updateResumoDiaCounts(resumoDiaData);
+  }
+
+  // Ao alterar filtro, atualizar tabelas
+  document.getElementById('filter-status-1').addEventListener('change', filterAndRender);
+  document.getElementById('filter-status-2').addEventListener('change', filterAndRender);
+
+  // Ouvir edição de status na tabela 2
+  document.querySelector('#table2 tbody').addEventListener('change', e => {
+    if (e.target.classList.contains('status-edit')) {
+      const tr = e.target.closest('tr');
+      const id = tr.children[0].textContent;
+      const newStatus = e.target.value;
+
+      // Atualiza o array de dados local
+      const row = resumoDiaData.find(r => r.ID === id);
+      if (row) {
+        row.status = newStatus;
+        updateResumoDiaCounts(resumoDiaData);
+      }
+    }
+  });
+
+  // Inicialização: carregar dados e renderizar
+  Promise.all([fetchSheet(FOLHA3), fetchSheet(RESUMO_DIA)])
+    .then(([data1, data2]) => {
+      folha3Data = data1;
+      resumoDiaData = data2;
+      filterAndRender();
+    })
+    .catch(err => {
+      console.error('Erro ao carregar dados do Google Sheets:', err);
+    });
+</script>
+
+</body>
+</html>
