@@ -336,6 +336,32 @@ const SHEET_ID = '1VWRHITYxqbnW2nwzfM9nO6w61LpWpySViy3FzOugOlE';
 const FOLHA3 = 'Folha3';
 const RESUMO_DIA = 'resumo_dia';
 
+function formatDateISO(dateObj) {
+  if (!dateObj) return '';
+  if (typeof dateObj === 'string') {
+    // já formatado ou outro tipo, tenta retornar como está
+    return dateObj;
+  }
+  // data do tipo { year: 2025, month: 7, day: 9 } ou Date-like?
+  // No seu caso, o Google Sheets JSON pode retornar um objeto assim:
+  // Date(2025,6,9) significa mês 6 = julho (0-based)
+  // Precisamos detectar e criar Date:
+  if (typeof dateObj === 'object' && 'year' in dateObj && 'month' in dateObj && 'day' in dateObj) {
+    const y = dateObj.year;
+    const m = dateObj.month; // já corrigido?
+    const d = dateObj.day;
+    return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+  }
+  // Caso seja um objeto Date real:
+  if (dateObj instanceof Date) {
+    const y = dateObj.getFullYear();
+    const m = dateObj.getMonth() + 1;
+    const d = dateObj.getDate();
+    return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+  }
+  return dateObj;
+}
+
 function fetchSheet(sheetName) {
   const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
   return fetch(url)
@@ -346,6 +372,27 @@ function fetchSheet(sheetName) {
       const rows = jsonData.table.rows.map(r => {
         const obj = {};
         r.c.forEach((cell, i) => {
+          if (cell && typeof cell.v === 'string' && cell.v.startsWith('Date')) {
+            // Exemplo: Date(2025,6,9) ou Date(1899,11,30,12,39,0)
+            const m = cell.v.match(/Date\((\d+),(\d+),(\d+)(?:,(\d+),(\d+),(\d+))?\)/);
+            if (m) {
+              const y = m[1];
+              const mo = Number(m[2]) + 1;
+              const d = m[3];
+              if (cols[i] === 'data') {
+                obj[cols[i]] = `${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+              } else if (cols[i] === 'hora') {
+                // hora, minuto, segundo
+                const h = m[4] || '00';
+                const mi = m[5] || '00';
+                const s = m[6] || '00';
+                obj[cols[i]] = `${String(h).padStart(2,'0')}:${String(mi).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+              } else {
+                obj[cols[i]] = cell.v;
+              }
+              return;
+            }
+          }
           obj[cols[i]] = cell ? cell.v : '';
         });
         return obj;
@@ -483,6 +530,9 @@ function updateDateTime() {
 }
 updateDateTime();
 setInterval(updateDateTime, 1000);
+
+
+
 
 </script>
 
