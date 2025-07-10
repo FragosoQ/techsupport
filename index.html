@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tech Support</title>
+  <title>WhatsApp TechSupport</title>
  <style>
  html, body {
   margin: 0;
@@ -247,6 +247,25 @@ td select {
   opacity: 0.8; /* opcional para suavizar */
 }
 
+  .title-container {
+    position: relative;
+    display: inline-block;
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+  }
+  .title-container img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px; /* ajuste o tamanho */
+    height: auto;
+    transform: translate(-50%, -50%);
+    opacity: 0.2; /* opacidade para ficar atrás */
+    z-index: -1;
+  }
+
+
 
  </style>
 </head>
@@ -254,14 +273,19 @@ td select {
 
 <header>
   <img src="https://static.wixstatic.com/media/a6967f_982db5e228854134b613cf1ffab4708d~mv2.png" alt="logo" class="logo" />
-  <div class="status-counter">
-    <div class="status-group">
-      <div class="status-ball aberto"></div> <span id="abertos-count">0</span>
-    </div>
-    <div class="status-group">
-      <div class="status-ball resolvido"></div> <span id="resolvidos-count">0</span>
-    </div>
+<div class="status-counter">
+  <div class="status-group" style="display: flex; align-items: center;">
+    <img src="https://static.wixstatic.com/media/a6967f_a73e1ebd828441a987868435e350d047~mv2.webp" alt="ícone aberto" style="width: 20px; height: 20px; margin-right: 6px;">
+    <div class="status-ball aberto"></div>
+    <span id="abertos-count" style="margin-left: 6px;">0</span>
   </div>
+  <div class="status-group" style="display: flex; align-items: center;">
+    <!--<img src="https://static.wixstatic.com/media/a6967f_a73e1ebd828441a987868435e350d047~mv2.webp" alt="ícone resolvido" style="width: 20px; height: 20px; margin-right: 6px;">-->
+    <div class="status-ball resolvido"></div>
+    <span id="resolvidos-count" style="margin-left: 6px;">0</span>
+  </div>
+</div>
+
   <div class="datetime" id="datetime"></div>
 </header>
 
@@ -355,6 +379,7 @@ td select {
 
  
 </div>
+
 
 <script>
 const SHEET_ID = '1VWRHITYxqbnW2nwzfM9nO6w61LpWpySViy3FzOugOlE';
