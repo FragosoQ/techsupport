@@ -389,25 +389,19 @@ const RESUMO_DIA = 'resumo_dia';
 function formatDateISO(dateObj) {
   if (!dateObj) return '';
   if (typeof dateObj === 'string') {
-    // já formatado ou outro tipo, tenta retornar como está
     return dateObj;
   }
-  // data do tipo { year: 2025, month: 7, day: 9 } ou Date-like?
-  // No seu caso, o Google Sheets JSON pode retornar um objeto assim:
-  // Date(2025,6,9) significa mês 6 = julho (0-based)
-  // Precisamos detectar e criar Date:
   if (typeof dateObj === 'object' && 'year' in dateObj && 'month' in dateObj && 'day' in dateObj) {
     const y = dateObj.year;
-    const m = dateObj.month; // já corrigido?
+    const m = dateObj.month;
     const d = dateObj.day;
-    return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
   }
-  // Caso seja um objeto Date real:
   if (dateObj instanceof Date) {
     const y = dateObj.getFullYear();
     const m = dateObj.getMonth() + 1;
     const d = dateObj.getDate();
-    return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
   }
   return dateObj;
 }
@@ -419,24 +413,22 @@ function fetchSheet(sheetName) {
     .then(data => {
       const jsonData = JSON.parse(data.substr(47).slice(0, -2));
       const cols = jsonData.table.cols.map(c => c.label);
-      const rows = jsonData.table.rows.map(r => {
+      return jsonData.table.rows.map(r => {
         const obj = {};
         r.c.forEach((cell, i) => {
           if (cell && typeof cell.v === 'string' && cell.v.startsWith('Date')) {
-            // Exemplo: Date(2025,6,9) ou Date(1899,11,30,12,39,0)
             const m = cell.v.match(/Date\((\d+),(\d+),(\d+)(?:,(\d+),(\d+),(\d+))?\)/);
             if (m) {
               const y = m[1];
               const mo = Number(m[2]) + 1;
               const d = m[3];
               if (cols[i] === 'data') {
-                obj[cols[i]] = `${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                obj[cols[i]] = `${y}-${String(mo).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
               } else if (cols[i] === 'hora') {
-                // hora, minuto, segundo
                 const h = m[4] || '00';
                 const mi = m[5] || '00';
                 const s = m[6] || '00';
-                obj[cols[i]] = `${String(h).padStart(2,'0')}:${String(mi).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+                obj[cols[i]] = `${String(h).padStart(2, '0')}:${String(mi).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
               } else {
                 obj[cols[i]] = cell.v;
               }
@@ -447,7 +439,6 @@ function fetchSheet(sheetName) {
         });
         return obj;
       });
-      return rows;
     });
 }
 
@@ -455,18 +446,18 @@ function renderResumo(data) {
   const tbody = document.getElementById('tbody-resumo');
   tbody.innerHTML = '';
   data.forEach(row => {
-    const statusClass = row.status.toLowerCase() === 'aberto' ? 'status-aberto' :
-                        row.status.toLowerCase() === 'resolvido' ? 'status-resolvido' : '';
+    const statusClass = row.status?.toLowerCase() === 'aberto' ? 'status-aberto' :
+                        row.status?.toLowerCase() === 'resolvido' ? 'status-resolvido' : '';
     tbody.innerHTML += `
       <tr>
-        <td>${row.ID}</td>
-        <td>${row.name}</td>
-        <td>${row.RESUMO}</td>
-        <td>${row.data}</td>
-        <td>${row.hora}</td>
-        <td><span class="${statusClass}">${row.status}</span></td>
-        <td>${row.contacto}</td>
-        <td>${row.ID_KEYWORD}</td>
+        <td>${row.ID || ''}</td>
+        <td>${row.name || ''}</td>
+        <td>${row.RESUMO || ''}</td>
+        <td>${row.data || ''}</td>
+        <td>${row.hora || ''}</td>
+        <td><span class="${statusClass}">${row.status || ''}</span></td>
+        <td>${row.contacto || ''}</td>
+        <td>${row.ID_KEYWORD || ''}</td>
       </tr>`;
   });
 }
@@ -475,26 +466,26 @@ function renderInputs(data) {
   const tbody = document.getElementById('tbody-inputs');
   tbody.innerHTML = '';
   data.forEach(row => {
-    const statusClass = row.status.toLowerCase() === 'aberto' ? 'status-aberto' :
-                        row.status.toLowerCase() === 'resolvido' ? 'status-resolvido' : '';
+    const statusClass = row.status?.toLowerCase() === 'aberto' ? 'status-aberto' :
+                        row.status?.toLowerCase() === 'resolvido' ? 'status-resolvido' : '';
     tbody.innerHTML += `
       <tr>
-        <td>${row.ID}</td>
-        <td>${row.name}</td>
-        <td>${row.RESUMO}</td>
-        <td>${row.data}</td>
-        <td>${row.hora}</td>
-        <td><span class="${statusClass}">${row.status}</span></td>
-        <td>${row.contacto}</td>
-        <td>${row.keyword}</td>
-        <td>${row.ID_KEYWORD}</td>
+        <td>${row.ID || ''}</td>
+        <td>${row.name || ''}</td>
+        <td>${row.RESUMO || ''}</td>
+        <td>${row.data || ''}</td>
+        <td>${row.hora || ''}</td>
+        <td><span class="${statusClass}">${row.status || ''}</span></td>
+        <td>${row.contacto || ''}</td>
+        <td>${row.keyword || ''}</td>
+        <td>${row.ID_KEYWORD || ''}</td>
       </tr>`;
   });
 }
 
 function updateCounters(data) {
-  const abertos = data.filter(r => r.status.toLowerCase() === 'aberto').length;
-  const resolvidos = data.filter(r => r.status.toLowerCase() === 'resolvido').length;
+  const abertos = data.filter(r => r.status?.toLowerCase() === 'aberto').length;
+  const resolvidos = data.filter(r => r.status?.toLowerCase() === 'resolvido').length;
   document.getElementById('abertos-count').textContent = abertos;
   document.getElementById('resolvidos-count').textContent = resolvidos;
 }
@@ -512,18 +503,18 @@ function applyFiltersResumo() {
   const filtroIDKeyword = document.getElementById('filter-id_keyword-resumo').value.trim().toLowerCase();
 
   const resumoFiltrado = resumoDiaData.filter(r => {
-    if (filtroStatusResumo && r.status.toLowerCase() !== filtroStatusResumo) return false;
-    if (filtroID && !String(r.ID).toLowerCase().includes(filtroID)) return false;
-    if (filtroName && !r.name.toLowerCase().includes(filtroName)) return false;
-    if (filtroResumo && !r.RESUMO.toLowerCase().includes(filtroResumo)) return false;
+    if (filtroStatusResumo && r.status?.toLowerCase() !== filtroStatusResumo) return false;
+    if (filtroID && !String(r.ID || '').toLowerCase().includes(filtroID)) return false;
+    if (filtroName && !r.name?.toLowerCase().includes(filtroName)) return false;
+    if (filtroResumo && !r.RESUMO?.toLowerCase().includes(filtroResumo)) return false;
     if (filtroData && r.data !== filtroData) return false;
-    if (filtroContacto && !r.contacto.toLowerCase().includes(filtroContacto)) return false;
-    if (filtroIDKeyword && !r.ID_KEYWORD.toLowerCase().includes(filtroIDKeyword)) return false;
+    if (filtroContacto && !r.contacto?.toLowerCase().includes(filtroContacto)) return false;
+    if (filtroIDKeyword && !r.ID_KEYWORD?.toLowerCase().includes(filtroIDKeyword)) return false;
     return true;
   });
 
   renderResumo(resumoFiltrado);
-  updateCounters(resumoDiaData);
+  updateCounters(resumoFiltrado);
 }
 
 function applyFiltersInputs() {
@@ -537,14 +528,14 @@ function applyFiltersInputs() {
   const filtroIDKeyword = document.getElementById('filter-id_keyword-inputs').value.trim().toLowerCase();
 
   const inputsFiltrado = folha3Data.filter(r => {
-    if (filtroStatusInputs && r.status.toLowerCase() !== filtroStatusInputs) return false;
-    if (filtroID && !String(r.ID).toLowerCase().includes(filtroID)) return false;
-    if (filtroName && !r.name.toLowerCase().includes(filtroName)) return false;
-    if (filtroResumo && !r.RESUMO.toLowerCase().includes(filtroResumo)) return false;
+    if (filtroStatusInputs && r.status?.toLowerCase() !== filtroStatusInputs) return false;
+    if (filtroID && !String(r.ID || '').toLowerCase().includes(filtroID)) return false;
+    if (filtroName && !r.name?.toLowerCase().includes(filtroName)) return false;
+    if (filtroResumo && !r.RESUMO?.toLowerCase().includes(filtroResumo)) return false;
     if (filtroData && r.data !== filtroData) return false;
-    if (filtroContacto && !r.contacto.toLowerCase().includes(filtroContacto)) return false;
-    if (filtroKeyword && !r.keyword.toLowerCase().includes(filtroKeyword)) return false;
-    if (filtroIDKeyword && !r.ID_KEYWORD.toLowerCase().includes(filtroIDKeyword)) return false;
+    if (filtroContacto && !r.contacto?.toLowerCase().includes(filtroContacto)) return false;
+    if (filtroKeyword && !r.keyword?.toLowerCase().includes(filtroKeyword)) return false;
+    if (filtroIDKeyword && !r.ID_KEYWORD?.toLowerCase().includes(filtroIDKeyword)) return false;
     return true;
   });
 
@@ -552,17 +543,22 @@ function applyFiltersInputs() {
 }
 
 // Eventos dos filtros Resumo Dia
-['filter-status-resumo', 'filter-id-resumo', 'filter-name-resumo', 'filter-resumo-resumo', 'filter-data-resumo', 'filter-contacto-resumo', 'filter-id_keyword-resumo']
-.forEach(id => {
+[
+  'filter-status-resumo', 'filter-id-resumo', 'filter-name-resumo',
+  'filter-resumo-resumo', 'filter-data-resumo', 'filter-contacto-resumo',
+  'filter-id_keyword-resumo'
+].forEach(id => {
   const el = document.getElementById(id);
-  if(el) el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', applyFiltersResumo);
+  if (el) el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', applyFiltersResumo);
 });
 
 // Eventos dos filtros Inputs
-['filter-status-inputs', 'filter-id-inputs', 'filter-name-inputs', 'filter-resumo-inputs', 'filter-data-inputs', 'filter-contacto-inputs', 'filter-keyword-inputs', 'filter-id_keyword-inputs']
-.forEach(id => {
+[
+  'filter-status-inputs', 'filter-id-inputs', 'filter-name-inputs', 'filter-resumo-inputs',
+  'filter-data-inputs', 'filter-contacto-inputs', 'filter-keyword-inputs', 'filter-id_keyword-inputs'
+].forEach(id => {
   const el = document.getElementById(id);
-  if(el) el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', applyFiltersInputs);
+  if (el) el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', applyFiltersInputs);
 });
 
 Promise.all([fetchSheet(FOLHA3), fetchSheet(RESUMO_DIA)])
@@ -573,7 +569,6 @@ Promise.all([fetchSheet(FOLHA3), fetchSheet(RESUMO_DIA)])
     applyFiltersInputs();
   });
 
-// Atualizar data e hora em tempo real
 function updateDateTime() {
   const now = new Date();
   document.getElementById('datetime').textContent = now.toLocaleString('pt-PT');
@@ -583,10 +578,9 @@ setInterval(updateDateTime, 1000);
 
 setInterval(() => {
   location.reload();
-}, 300000); // 300000 ms = 5 minutos
-
-
+}, 300000);
 </script>
+
 
 </body>
 </html>
