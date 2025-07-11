@@ -289,6 +289,22 @@ td select {
 }
 
 
+.atualizar-btn {
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.atualizar-btn:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+  color: black;
+}
+
+
  </style>
 </head>
 <body>
@@ -490,16 +506,41 @@ function renderResumo(data) {
         <td>${row.data || ''}</td>
         <td>${row.hora || ''}</td>
         <td>
-          <select class="status-select ${classeStatus}" data-index="${index}">
+          <select class="status-select ${classeStatus}" data-index="${index}" data-idkeyword="${row.ID_KEYWORD}">
             <option value="Aberto" ${row.status === 'Aberto' ? 'selected' : ''}>Aberto</option>
             <option value="Resolvido" ${row.status === 'Resolvido' ? 'selected' : ''}>Resolvido</option>
           </select>
+   <button class="atualizar-btn">Atualizar</button>
         </td>
         <td>${row.contacto || ''}</td>
         <td>${row.ID_KEYWORD || ''}</td>
       </tr>`;
   });
+
+  // Após renderizar a tabela, ativa os listeners dos botões
+  document.querySelectorAll('.atualizar-btn').forEach((btn, index) => {
+    btn.addEventListener('click', async () => {
+      const select = document.querySelectorAll('.status-select')[index];
+      const novoStatus = select.value;
+      const idKeyword = select.dataset.idkeyword;
+
+      try {
+        const resp = await fetch('https://h46kt34t-n8n.cloudfy.host/webhook/1ec7da22-2f56-40db-a4d1-eb8aaf3c94ca', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ idKeyword, status: novoStatus })
+        });
+
+        if (!resp.ok) throw new Error('Erro na atualização');
+        /*alert('Status atualizado com sucesso!');*/
+      } catch (err) {
+        console.error(err);
+        alert('Erro ao atualizar o status');
+      }
+    });
+  });
 }
+
 
 
 function renderInputs(data) {
