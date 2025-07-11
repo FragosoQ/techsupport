@@ -265,9 +265,105 @@ td select {
     z-index: -1;
   }
 
+#resumo-dia table th:nth-child(6),
+#resumo-dia table td:nth-child(6),
+#inputs table th:nth-child(6),
+#inputs table td:nth-child(6) {
+  min-width: 120px;
 
+}
+.status-select {
+  text-align-last: center; /* centraliza o texto selecionado */
+  /* para compatibilidade */
+  -moz-text-align-last: center;
+  -webkit-text-align-last: center;
+}
+
+.status-select option[value="Aberto"] {
+  color: yellow;
+  background-color: black;
+}
+.status-select option[value="Resolvido"] {
+  color: limegreen;
+  background-color: black;
+}
+
+
+.status-label {
+  font-weight: bold;
+  min-width: 70px;
+  text-align: center;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.9em;
+}
+
+.status-verde {
+  color: #0f0;
+  background-color: rgba(0, 255, 0, 0.2);
+}
+
+.status-amarelo {
+  color: #ff0;
+  background-color: rgba(255, 255, 0, 0.2);
+}
+
+
+.status-select {
+  width: 20px;
+  color: white;
+  text-shadow: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  background: white url('data:image/svg+xml;utf8,<svg fill="white" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 5px center;
+  background-size: 12px;
+
+  border-radius: 3px;
+  padding-right: 20px;
+  background-color: transparent; /* para fundo transparente */
+}
+
+
+#inputs .status-select {
+  width: 120px;
+ 
+
+  background-size: 12px;
+
+  border-radius: 3px;
+  padding-right: 20px;
+
+}
+
+
+td {
+  display: table-cell !important;
+  align-items: initial !important;
+  gap: initial !important;
+}
+
+
+<td>
+  <select class="status-select" data-linha="X" data-index="Y" data-table="inputs">
+    <option value="Aberto">Aberto</option>
+    <option value="Resolvido">Resolvido</option>
+  </select>
+  <span class="status-label status-amarelo">Aberto</span>
+</td>
+
+
+
+.filters label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px; /* espaço entre label e select */
+  margin-right: 15px; /* espaço entre grupos de filtros */
+}
 
  </style>
+ 
 </head>
 <body>
 
@@ -331,6 +427,8 @@ td select {
   <br>
   <div class="divider"></div>
   
+  
+  
   <section class="half" id="inputs">
     <h2>Inputs</h2>
     <div class="filters">
@@ -346,13 +444,7 @@ td select {
       <label>data:
         <input type="date" id="filter-data-inputs" />
       </label>
-      <label>Status:
-        <select id="filter-status-inputs">
-          <option value="">Todos</option>
-          <option value="Aberto">Aberto</option>
-          <option value="Resolvido">Resolvido</option>
-        </select>
-      </label>
+
       <label>contacto:
         <input type="text" id="filter-contacto-inputs" placeholder="Filtrar contacto" />
       </label>
@@ -420,8 +512,9 @@ function renderResumo(data) {
   const tbody = document.getElementById('tbody-resumo');
   tbody.innerHTML = '';
   data.forEach((row, index) => {
-    // Linha real na planilha (cabeçalho + índice zero-based)
     const linhaPlanilha = index + 2;
+    const status = row.status || 'Aberto';
+    const colorClass = status === 'Resolvido' ? 'status-verde' : 'status-amarelo';
 
     tbody.innerHTML += `
       <tr>
@@ -430,11 +523,12 @@ function renderResumo(data) {
         <td>${row.RESUMO || ''}</td>
         <td>${row.data || ''}</td>
         <td>${row.hora || ''}</td>
-        <td>
+        <td style="display:flex; align-items:center; gap:8px;">
           <select class="status-select" data-linha="${linhaPlanilha}" data-index="${index}" data-table="resumo">
-            <option value="Aberto" ${row.status === 'Aberto' ? 'selected' : ''}>Aberto</option>
-            <option value="Resolvido" ${row.status === 'Resolvido' ? 'selected' : ''}>Resolvido</option>
+            <option value="Aberto" ${status === 'Aberto' ? 'selected' : ''}>Aberto</option>
+            <option value="Resolvido" ${status === 'Resolvido' ? 'selected' : ''}>Resolvido</option>
           </select>
+          <span class="status-label ${colorClass}">${status}</span>
         </td>
         <td>${row.contacto || ''}</td>
         <td>${row.ID_KEYWORD || ''}</td>
@@ -442,16 +536,21 @@ function renderResumo(data) {
   });
 
   tbody.querySelectorAll('.status-select').forEach(select => {
+    // Atualiza o texto colorido no span ao mudar o select
+    const span = select.nextElementSibling;
     select.addEventListener('change', e => {
+      const value = e.target.value;
+      // Atualiza span
+      span.textContent = value;
+      span.className = 'status-label ' + (value === 'Resolvido' ? 'status-verde' : 'status-amarelo');
+
+      // Atualiza dados locais e backend (como antes)
       const linha = parseInt(e.target.getAttribute('data-linha'));
       const idx = parseInt(e.target.getAttribute('data-index'));
-      const value = e.target.value;
 
-      // Atualiza localmente
       resumoDiaData[idx].status = value;
       updateCounters();
 
-      // Envia para backend Google Apps Script
       fetch('https://script.google.com/macros/s/AKfycbwVdPwHaTDcndGLoHrqZaDCB5aqJEqS1AWKZzhyoQmJSBFzRVTX8ODPmNzRhXgeFBfCyQ/exec', {
         method: 'POST',
         body: JSON.stringify({action: "update", linha: linha, status: value}),
@@ -473,10 +572,21 @@ function renderResumo(data) {
 }
 
 
+
+
 function renderInputs(data) {
   const tbody = document.getElementById('tbody-inputs');
   tbody.innerHTML = '';
+
+  // Aplica filtro de status
+  const filtroStatus = document.querySelector('.inputs-status-filter.active')?.getAttribute('data-status');
+  if (filtroStatus) {
+    data = data.filter(row => row.status?.toLowerCase() === filtroStatus.toLowerCase());
+  }
+
   data.forEach((row, index) => {
+    const linhaPlanilha = index + 2;
+
     tbody.innerHTML += `
       <tr>
         <td>${row.ID || ''}</td>
@@ -485,7 +595,7 @@ function renderInputs(data) {
         <td>${row.data || ''}</td>
         <td>${row.hora || ''}</td>
         <td>
-          <select class="status-select" data-index="${index}" data-table="inputs">
+          <select class="status-select" data-index="${index}" data-linha="${linhaPlanilha}" data-table="inputs">
             <option value="Aberto" ${row.status === 'Aberto' ? 'selected' : ''}>Aberto</option>
             <option value="Resolvido" ${row.status === 'Resolvido' ? 'selected' : ''}>Resolvido</option>
           </select>
@@ -498,17 +608,38 @@ function renderInputs(data) {
 
   tbody.querySelectorAll('.status-select').forEach(select => {
     select.addEventListener('change', e => {
-      const idx = e.target.getAttribute('data-index');
+      const idx = parseInt(e.target.getAttribute('data-index'));
+      const linha = parseInt(e.target.getAttribute('data-linha'));
       const table = e.target.getAttribute('data-table');
       const value = e.target.value;
 
       if (table === 'inputs') {
         folha3Data[idx].status = value;
+
+        // updateCountersInputs(); // (opcional) Atualiza contadores se tiveres algum
+
+        // Envia alteração para backend (opcional)
+        fetch('https://script.google.com/macros/s/AKfycbwVdPwHaTDcndGLoHrqZaDCB5aqJEqS1AWKZzhyoQmJSBFzRVTX8ODPmNzRhXgeFBfCyQ/exec', {
+          method: 'POST',
+          body: JSON.stringify({ action: "update", linha: linha, status: value, tabela: "Folha3" }),
+          headers: { 'Content-Type': 'application/json' }
+        })
+        .then(res => res.text())
+        .then(text => {
+          if (text === "OK") {
+            console.log(`Status atualizado na linha ${linha} (Inputs)`);
+          } else {
+            console.error('Erro ao atualizar status (Inputs):', text);
+          }
+        })
+        .catch(err => {
+          console.error('Erro na requisição (Inputs):', err);
+        });
       }
-      // Aqui também pode adicionar código para salvar a alteração.
     });
   });
 }
+
 
 
 
@@ -624,6 +755,18 @@ async function init() {
 }
 
 init();
+
+
+fetchSheet(RESUMO_DIA).then(data => {
+  window.resumoData = data; // guarda os dados brutos para filtros posteriores
+  renderResumo(data);
+});
+
+fetchSheet(FOLHA3).then(data => {
+  window.inputsData = data; // guarda os dados brutos para filtros posteriores
+  renderInputs(data);
+});
+
 
 
 setInterval(() => {
