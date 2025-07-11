@@ -265,121 +265,26 @@ td select {
     z-index: -1;
   }
 
-#resumo-dia table th:nth-child(6),
-#resumo-dia table td:nth-child(6),
-#inputs table th:nth-child(6),
-#inputs table td:nth-child(6) {
-  min-width: 120px;
 
-}
-.status-select {
-  text-align-last: center; /* centraliza o texto selecionado */
-  /* para compatibilidade */
-  -moz-text-align-last: center;
-  -webkit-text-align-last: center;
-}
-
-.status-select option[value="Aberto"] {
-  color: yellow;
-  background-color: black;
-}
-.status-select option[value="Resolvido"] {
-  color: limegreen;
-  background-color: black;
-}
-
-
-.status-label {
-  font-weight: bold;
-  min-width: 70px;
-  text-align: center;
-  border-radius: 4px;
-  padding: 2px 6px;
-  font-size: 0.9em;
-}
-
-.status-verde {
-  color: #0f0;
-  background-color: rgba(0, 255, 0, 0.2);
-}
-
-.status-amarelo {
-  color: #ff0;
-  background-color: rgba(255, 255, 0, 0.2);
-}
-
-
-.status-select {
-  width: 20px;
-  color: white;
-  text-shadow: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  cursor: pointer;
-  background: white url('data:image/svg+xml;utf8,<svg fill="white" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 5px center;
-  background-size: 12px;
-
-  border-radius: 3px;
-  padding-right: 20px;
-  background-color: transparent; /* para fundo transparente */
-}
-
-
-#inputs .status-select {
-  width: 120px;
- 
-
-  background-size: 12px;
-
-  border-radius: 3px;
-  padding-right: 20px;
-
-}
-
-
-td {
-  display: table-cell !important;
-  align-items: initial !important;
-  gap: initial !important;
-}
-
-
-<td>
-  <select class="status-select" data-linha="X" data-index="Y" data-table="inputs">
-    <option value="Aberto">Aberto</option>
-    <option value="Resolvido">Resolvido</option>
-  </select>
-  <span class="status-label status-amarelo">Aberto</span>
-</td>
-
-
-
-.filters label {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px; /* espaço entre label e select */
-  margin-right: 15px; /* espaço entre grupos de filtros */
-}
 
  </style>
- 
 </head>
 <body>
 
 <header>
   <img src="https://static.wixstatic.com/media/a6967f_982db5e228854134b613cf1ffab4708d~mv2.png" alt="logo" class="logo" />
-  <div class="status-counter">
-    <div class="status-group" style="display: flex; align-items: center;">
-      <img src="https://static.wixstatic.com/media/a6967f_a73e1ebd828441a987868435e350d047~mv2.webp" alt="ícone aberto" style="width: 20px; height: 20px; margin-right: 6px;">
-      <div class="status-ball aberto"></div> <!-- bola amarela -->
-      <span id="abertos-count" style="margin-left: 6px;">0</span>
-    </div>
-    <div class="status-group" style="display: flex; align-items: center;">
-      <div class="status-ball resolvido"></div> <!-- bola verde -->
-      <span id="resolvidos-count" style="margin-left: 6px;">0</span>
-    </div>
+<div class="status-counter">
+  <div class="status-group" style="display: flex; align-items: center;">
+    <img src="https://static.wixstatic.com/media/a6967f_a73e1ebd828441a987868435e350d047~mv2.webp" alt="ícone aberto" style="width: 20px; height: 20px; margin-right: 6px;">
+    <div class="status-ball aberto"></div>
+    <span id="abertos-count" style="margin-left: 6px;">0</span>
   </div>
+  <div class="status-group" style="display: flex; align-items: center;">
+    <!--<img src="https://static.wixstatic.com/media/a6967f_a73e1ebd828441a987868435e350d047~mv2.webp" alt="ícone resolvido" style="width: 20px; height: 20px; margin-right: 6px;">-->
+    <div class="status-ball resolvido"></div>
+    <span id="resolvidos-count" style="margin-left: 6px;">0</span>
+  </div>
+</div>
 
   <div class="datetime" id="datetime"></div>
 </header>
@@ -400,6 +305,7 @@ td {
       <label>data:
         <input type="date" id="filter-data-resumo" />
       </label>
+     
       <label>Status:
         <select id="filter-status-resumo">
           <option value="">Todos</option>
@@ -424,46 +330,54 @@ td {
     </table>
   </section>
   
-  <br>
-  <div class="divider"></div>
-  
-  
-  
-  <section class="half" id="inputs">
-    <h2>Inputs</h2>
-    <div class="filters">
-      <label>ID:
-        <input type="text" id="filter-id-inputs" placeholder="Filtrar ID" />
-      </label>
-      <label>name:
-        <input type="text" id="filter-name-inputs" placeholder="Filtrar name" />
-      </label>
-      <label>RESUMO:
-        <input type="text" id="filter-resumo-inputs" placeholder="Filtrar RESUMO" />
-      </label>
-      <label>data:
-        <input type="date" id="filter-data-inputs" />
-      </label>
+<br>
+<div class="divider"></div>
 
-      <label>contacto:
-        <input type="text" id="filter-contacto-inputs" placeholder="Filtrar contacto" />
-      </label>
-      <label>keyword:
-        <input type="text" id="filter-keyword-inputs" placeholder="Filtrar keyword" />
-      </label>
-      <label>ID_KEYWORD:
-        <input type="text" id="filter-id_keyword-inputs" placeholder="Filtrar ID_KEYWORD" />
-      </label>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th><th>name</th><th>RESUMO</th><th>data</th><th>hora</th><th>status</th><th>contacto</th><th>keyword</th><th>ID_KEYWORD</th>
-        </tr>
-      </thead>
-      <tbody id="tbody-inputs"></tbody>
-    </table>
-  </section>
+
+ <section class="half" id="inputs">
+  <h2>Inputs</h2>
+  <div class="filters">
+    <label>ID:
+      <input type="text" id="filter-id-inputs" placeholder="Filtrar ID" />
+    </label>
+    <label>name:
+      <input type="text" id="filter-name-inputs" placeholder="Filtrar name" />
+    </label>
+    <label>RESUMO:
+      <input type="text" id="filter-resumo-inputs" placeholder="Filtrar RESUMO" />
+    </label>
+    <label>data:
+      <input type="date" id="filter-data-inputs" />
+    </label>
+   
+    <label>Status:
+      <select id="filter-status-inputs">
+        <option value="">Todos</option>
+        <option value="Aberto">Aberto</option>
+        <option value="Resolvido">Resolvido</option>
+      </select>
+    </label>
+    <label>contacto:
+      <input type="text" id="filter-contacto-inputs" placeholder="Filtrar contacto" />
+    </label>
+    <label>keyword:
+      <input type="text" id="filter-keyword-inputs" placeholder="Filtrar keyword" />
+    </label>
+    <label>ID_KEYWORD:
+      <input type="text" id="filter-id_keyword-inputs" placeholder="Filtrar ID_KEYWORD" />
+    </label>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th><th>name</th><th>RESUMO</th><th>data</th><th>hora</th><th>status</th><th>contacto</th><th>keyword</th><th>ID_KEYWORD</th>
+      </tr>
+    </thead>
+    <tbody id="tbody-inputs"></tbody>
+  </table>
+</section>
+
+ 
 </div>
 
 
@@ -471,6 +385,26 @@ td {
 const SHEET_ID = '1VWRHITYxqbnW2nwzfM9nO6w61LpWpySViy3FzOugOlE';
 const FOLHA3 = 'Folha3';
 const RESUMO_DIA = 'resumo_dia';
+
+function formatDateISO(dateObj) {
+  if (!dateObj) return '';
+  if (typeof dateObj === 'string') {
+    return dateObj;
+  }
+  if (typeof dateObj === 'object' && 'year' in dateObj && 'month' in dateObj && 'day' in dateObj) {
+    const y = dateObj.year;
+    const m = dateObj.month;
+    const d = dateObj.day;
+    return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+  }
+  if (dateObj instanceof Date) {
+    const y = dateObj.getFullYear();
+    const m = dateObj.getMonth() + 1;
+    const d = dateObj.getDate();
+    return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+  }
+  return dateObj;
+}
 
 function fetchSheet(sheetName) {
   const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
@@ -511,11 +445,9 @@ function fetchSheet(sheetName) {
 function renderResumo(data) {
   const tbody = document.getElementById('tbody-resumo');
   tbody.innerHTML = '';
-  data.forEach((row, index) => {
-    const linhaPlanilha = index + 2;
-    const status = row.status || 'Aberto';
-    const colorClass = status === 'Resolvido' ? 'status-verde' : 'status-amarelo';
-
+  data.forEach(row => {
+    const statusClass = row.status?.toLowerCase() === 'aberto' ? 'status-aberto' :
+                        row.status?.toLowerCase() === 'resolvido' ? 'status-resolvido' : '';
     tbody.innerHTML += `
       <tr>
         <td>${row.ID || ''}</td>
@@ -523,70 +455,19 @@ function renderResumo(data) {
         <td>${row.RESUMO || ''}</td>
         <td>${row.data || ''}</td>
         <td>${row.hora || ''}</td>
-        <td style="display:flex; align-items:center; gap:8px;">
-          <select class="status-select" data-linha="${linhaPlanilha}" data-index="${index}" data-table="resumo">
-            <option value="Aberto" ${status === 'Aberto' ? 'selected' : ''}>Aberto</option>
-            <option value="Resolvido" ${status === 'Resolvido' ? 'selected' : ''}>Resolvido</option>
-          </select>
-          <span class="status-label ${colorClass}">${status}</span>
-        </td>
+        <td><span class="${statusClass}">${row.status || ''}</span></td>
         <td>${row.contacto || ''}</td>
         <td>${row.ID_KEYWORD || ''}</td>
       </tr>`;
   });
-
-  tbody.querySelectorAll('.status-select').forEach(select => {
-    // Atualiza o texto colorido no span ao mudar o select
-    const span = select.nextElementSibling;
-    select.addEventListener('change', e => {
-      const value = e.target.value;
-      // Atualiza span
-      span.textContent = value;
-      span.className = 'status-label ' + (value === 'Resolvido' ? 'status-verde' : 'status-amarelo');
-
-      // Atualiza dados locais e backend (como antes)
-      const linha = parseInt(e.target.getAttribute('data-linha'));
-      const idx = parseInt(e.target.getAttribute('data-index'));
-
-      resumoDiaData[idx].status = value;
-      updateCounters();
-
-      fetch('https://script.google.com/macros/s/AKfycbwVdPwHaTDcndGLoHrqZaDCB5aqJEqS1AWKZzhyoQmJSBFzRVTX8ODPmNzRhXgeFBfCyQ/exec', {
-        method: 'POST',
-        body: JSON.stringify({action: "update", linha: linha, status: value}),
-        headers: {'Content-Type': 'application/json'}
-      })
-      .then(res => res.text())
-      .then(text => {
-        if (text === "OK") {
-          console.log(`Status atualizado na linha ${linha}`);
-        } else {
-          console.error('Erro ao atualizar status:', text);
-        }
-      })
-      .catch(err => {
-        console.error('Erro na requisição:', err);
-      });
-    });
-  });
 }
-
-
-
 
 function renderInputs(data) {
   const tbody = document.getElementById('tbody-inputs');
   tbody.innerHTML = '';
-
-  // Aplica filtro de status
-  const filtroStatus = document.querySelector('.inputs-status-filter.active')?.getAttribute('data-status');
-  if (filtroStatus) {
-    data = data.filter(row => row.status?.toLowerCase() === filtroStatus.toLowerCase());
-  }
-
-  data.forEach((row, index) => {
-    const linhaPlanilha = index + 2;
-
+  data.forEach(row => {
+    const statusClass = row.status?.toLowerCase() === 'aberto' ? 'status-aberto' :
+                        row.status?.toLowerCase() === 'resolvido' ? 'status-resolvido' : '';
     tbody.innerHTML += `
       <tr>
         <td>${row.ID || ''}</td>
@@ -594,60 +475,17 @@ function renderInputs(data) {
         <td>${row.RESUMO || ''}</td>
         <td>${row.data || ''}</td>
         <td>${row.hora || ''}</td>
-        <td>
-          <select class="status-select" data-index="${index}" data-linha="${linhaPlanilha}" data-table="inputs">
-            <option value="Aberto" ${row.status === 'Aberto' ? 'selected' : ''}>Aberto</option>
-            <option value="Resolvido" ${row.status === 'Resolvido' ? 'selected' : ''}>Resolvido</option>
-          </select>
-        </td>
+        <td><span class="${statusClass}">${row.status || ''}</span></td>
         <td>${row.contacto || ''}</td>
         <td>${row.keyword || ''}</td>
         <td>${row.ID_KEYWORD || ''}</td>
       </tr>`;
   });
-
-  tbody.querySelectorAll('.status-select').forEach(select => {
-    select.addEventListener('change', e => {
-      const idx = parseInt(e.target.getAttribute('data-index'));
-      const linha = parseInt(e.target.getAttribute('data-linha'));
-      const table = e.target.getAttribute('data-table');
-      const value = e.target.value;
-
-      if (table === 'inputs') {
-        folha3Data[idx].status = value;
-
-        // updateCountersInputs(); // (opcional) Atualiza contadores se tiveres algum
-
-        // Envia alteração para backend (opcional)
-        fetch('https://script.google.com/macros/s/AKfycbwVdPwHaTDcndGLoHrqZaDCB5aqJEqS1AWKZzhyoQmJSBFzRVTX8ODPmNzRhXgeFBfCyQ/exec', {
-          method: 'POST',
-          body: JSON.stringify({ action: "update", linha: linha, status: value, tabela: "Folha3" }),
-          headers: { 'Content-Type': 'application/json' }
-        })
-        .then(res => res.text())
-        .then(text => {
-          if (text === "OK") {
-            console.log(`Status atualizado na linha ${linha} (Inputs)`);
-          } else {
-            console.error('Erro ao atualizar status (Inputs):', text);
-          }
-        })
-        .catch(err => {
-          console.error('Erro na requisição (Inputs):', err);
-        });
-      }
-    });
-  });
 }
 
-
-
-
-
-function updateCounters() {
-  const abertos = resumoDiaData.filter(r => r.status?.toLowerCase() === 'aberto').length;
-  const resolvidos = resumoDiaData.filter(r => r.status?.toLowerCase() === 'resolvido').length;
-
+function updateCounters(data) {
+  const abertos = data.filter(r => r.status?.toLowerCase() === 'aberto').length;
+  const resolvidos = data.filter(r => r.status?.toLowerCase() === 'resolvido').length;
   document.getElementById('abertos-count').textContent = abertos;
   document.getElementById('resolvidos-count').textContent = resolvidos;
 }
@@ -655,119 +493,88 @@ function updateCounters() {
 let folha3Data = [];
 let resumoDiaData = [];
 
-function filterData(data, filters) {
-  return data.filter(row => {
-    for (const key in filters) {
-      if (!filters[key]) continue;
-      const val = String(row[key] || '').toLowerCase();
-      const filterVal = filters[key].toLowerCase();
-      if (key === 'status') {
-        if (filterVal && val !== filterVal) return false;
-      } else if (!val.includes(filterVal)) {
-        return false;
-      }
-    }
+function applyFiltersResumo() {
+  const filtroStatusResumo = document.getElementById('filter-status-resumo').value.trim().toLowerCase();
+  const filtroID = document.getElementById('filter-id-resumo').value.trim().toLowerCase();
+  const filtroName = document.getElementById('filter-name-resumo').value.trim().toLowerCase();
+  const filtroResumo = document.getElementById('filter-resumo-resumo').value.trim().toLowerCase();
+  const filtroData = document.getElementById('filter-data-resumo').value;
+  const filtroContacto = document.getElementById('filter-contacto-resumo').value.trim().toLowerCase();
+  const filtroIDKeyword = document.getElementById('filter-id_keyword-resumo').value.trim().toLowerCase();
+
+  const resumoFiltrado = resumoDiaData.filter(r => {
+    if (filtroStatusResumo && r.status?.toLowerCase() !== filtroStatusResumo) return false;
+    if (filtroID && !String(r.ID || '').toLowerCase().includes(filtroID)) return false;
+    if (filtroName && !r.name?.toLowerCase().includes(filtroName)) return false;
+    if (filtroResumo && !r.RESUMO?.toLowerCase().includes(filtroResumo)) return false;
+    if (filtroData && r.data !== filtroData) return false;
+    if (filtroContacto && !r.contacto?.toLowerCase().includes(filtroContacto)) return false;
+    if (filtroIDKeyword && !r.ID_KEYWORD?.toLowerCase().includes(filtroIDKeyword)) return false;
     return true;
   });
-}
 
-function getResumoFilters() {
-  return {
-    ID: document.getElementById('filter-id-resumo').value.trim(),
-    name: document.getElementById('filter-name-resumo').value.trim(),
-    RESUMO: document.getElementById('filter-resumo-resumo').value.trim(),
-    data: document.getElementById('filter-data-resumo').value.trim(),
-    status: document.getElementById('filter-status-resumo').value.trim(),
-    contacto: document.getElementById('filter-contacto-resumo').value.trim(),
-    ID_KEYWORD: document.getElementById('filter-id_keyword-resumo').value.trim()
-  };
-}
-
-function getInputsFilters() {
-  return {
-    ID: document.getElementById('filter-id-inputs').value.trim(),
-    name: document.getElementById('filter-name-inputs').value.trim(),
-    RESUMO: document.getElementById('filter-resumo-inputs').value.trim(),
-    data: document.getElementById('filter-data-inputs').value.trim(),
-    status: document.getElementById('filter-status-inputs').value.trim(),
-    contacto: document.getElementById('filter-contacto-inputs').value.trim(),
-    keyword: document.getElementById('filter-keyword-inputs').value.trim(),
-    ID_KEYWORD: document.getElementById('filter-id_keyword-inputs').value.trim()
-  };
-}
-
-function applyFiltersResumo() {
-  const filters = getResumoFilters();
-  const filtered = filterData(resumoDiaData, filters);
-  renderResumo(filtered);
-  updateCounters();
+  renderResumo(resumoFiltrado);
+  updateCounters(resumoFiltrado);
 }
 
 function applyFiltersInputs() {
-  const filters = getInputsFilters();
-  const filtered = filterData(folha3Data, filters);
-  renderInputs(filtered);
+  const filtroStatusInputs = document.getElementById('filter-status-inputs').value.trim().toLowerCase();
+  const filtroID = document.getElementById('filter-id-inputs').value.trim().toLowerCase();
+  const filtroName = document.getElementById('filter-name-inputs').value.trim().toLowerCase();
+  const filtroResumo = document.getElementById('filter-resumo-inputs').value.trim().toLowerCase();
+  const filtroData = document.getElementById('filter-data-inputs').value;
+  const filtroContacto = document.getElementById('filter-contacto-inputs').value.trim().toLowerCase();
+  const filtroKeyword = document.getElementById('filter-keyword-inputs').value.trim().toLowerCase();
+  const filtroIDKeyword = document.getElementById('filter-id_keyword-inputs').value.trim().toLowerCase();
+
+  const inputsFiltrado = folha3Data.filter(r => {
+    if (filtroStatusInputs && r.status?.toLowerCase() !== filtroStatusInputs) return false;
+    if (filtroID && !String(r.ID || '').toLowerCase().includes(filtroID)) return false;
+    if (filtroName && !r.name?.toLowerCase().includes(filtroName)) return false;
+    if (filtroResumo && !r.RESUMO?.toLowerCase().includes(filtroResumo)) return false;
+    if (filtroData && r.data !== filtroData) return false;
+    if (filtroContacto && !r.contacto?.toLowerCase().includes(filtroContacto)) return false;
+    if (filtroKeyword && !r.keyword?.toLowerCase().includes(filtroKeyword)) return false;
+    if (filtroIDKeyword && !r.ID_KEYWORD?.toLowerCase().includes(filtroIDKeyword)) return false;
+    return true;
+  });
+
+  renderInputs(inputsFiltrado);
 }
 
-// Atualiza data e hora no header
+// Eventos dos filtros Resumo Dia
+[
+  'filter-status-resumo', 'filter-id-resumo', 'filter-name-resumo',
+  'filter-resumo-resumo', 'filter-data-resumo', 'filter-contacto-resumo',
+  'filter-id_keyword-resumo'
+].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', applyFiltersResumo);
+});
+
+// Eventos dos filtros Inputs
+[
+  'filter-status-inputs', 'filter-id-inputs', 'filter-name-inputs', 'filter-resumo-inputs',
+  'filter-data-inputs', 'filter-contacto-inputs', 'filter-keyword-inputs', 'filter-id_keyword-inputs'
+].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', applyFiltersInputs);
+});
+
+Promise.all([fetchSheet(FOLHA3), fetchSheet(RESUMO_DIA)])
+  .then(([dadosInputs, dadosResumo]) => {
+    folha3Data = dadosInputs;
+    resumoDiaData = dadosResumo;
+    applyFiltersResumo();
+    applyFiltersInputs();
+  });
+
 function updateDateTime() {
   const now = new Date();
-  const options = { 
-    timeZone: 'Europe/Lisbon', 
-    year: 'numeric', month: '2-digit', day: '2-digit',
-    hour: '2-digit', minute: '2-digit', second: '2-digit' 
-  };
-  const dateTimeString = now.toLocaleString('pt-PT', options);
-  document.getElementById('datetime').textContent = dateTimeString;
+  document.getElementById('datetime').textContent = now.toLocaleString('pt-PT');
 }
-
-function addFilterListeners() {
-  // Inputs de texto no Resumo Dia -> escutam 'input'
-  const resumoTextFilters = document.querySelectorAll('#resumo-dia .filters input');
-  resumoTextFilters.forEach(input => input.addEventListener('input', applyFiltersResumo));
-
-  // Selects (dropdowns) no Resumo Dia -> escutam 'change'
-  const resumoSelectFilters = document.querySelectorAll('#resumo-dia .filters select');
-  resumoSelectFilters.forEach(select => select.addEventListener('change', applyFiltersResumo));
-
-  // Inputs de texto nos Inputs -> escutam 'input'
-  const inputsTextFilters = document.querySelectorAll('#inputs .filters input');
-  inputsTextFilters.forEach(input => input.addEventListener('input', applyFiltersInputs));
-
-  // Selects (dropdowns) nos Inputs -> escutam 'change'
-  const inputsSelectFilters = document.querySelectorAll('#inputs .filters select');
-  inputsSelectFilters.forEach(select => select.addEventListener('change', applyFiltersInputs));
-}
-
-
-// Inicializa o app
-async function init() {
-  [resumoDiaData, folha3Data] = await Promise.all([
-    fetchSheet(RESUMO_DIA),
-    fetchSheet(FOLHA3)
-  ]);
-  applyFiltersResumo();
-  applyFiltersInputs();
-  updateCounters();
-  updateDateTime();
-  setInterval(updateDateTime, 1000);
-  addFilterListeners();
-}
-
-init();
-
-
-fetchSheet(RESUMO_DIA).then(data => {
-  window.resumoData = data; // guarda os dados brutos para filtros posteriores
-  renderResumo(data);
-});
-
-fetchSheet(FOLHA3).then(data => {
-  window.inputsData = data; // guarda os dados brutos para filtros posteriores
-  renderInputs(data);
-});
-
-
+updateDateTime();
+setInterval(updateDateTime, 1000);
 
 setInterval(() => {
   location.reload();
