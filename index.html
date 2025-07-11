@@ -273,18 +273,17 @@ td select {
 
 <header>
   <img src="https://static.wixstatic.com/media/a6967f_982db5e228854134b613cf1ffab4708d~mv2.png" alt="logo" class="logo" />
-<div class="status-counter">
-  <div class="status-group" style="display: flex; align-items: center;">
-    <img src="https://static.wixstatic.com/media/a6967f_a73e1ebd828441a987868435e350d047~mv2.webp" alt="ícone aberto" style="width: 20px; height: 20px; margin-right: 6px;">
-    <div class="status-ball aberto"></div>
-    <span id="abertos-count" style="margin-left: 6px;">0</span>
+  <div class="status-counter">
+    <div class="status-group" style="display: flex; align-items: center;">
+      <img src="https://static.wixstatic.com/media/a6967f_a73e1ebd828441a987868435e350d047~mv2.webp" alt="ícone aberto" style="width: 20px; height: 20px; margin-right: 6px;">
+      <div class="status-ball aberto"></div> <!-- bola amarela -->
+      <span id="abertos-count" style="margin-left: 6px;">0</span>
+    </div>
+    <div class="status-group" style="display: flex; align-items: center;">
+      <div class="status-ball resolvido"></div> <!-- bola verde -->
+      <span id="resolvidos-count" style="margin-left: 6px;">0</span>
+    </div>
   </div>
-  <div class="status-group" style="display: flex; align-items: center;">
-    <!--<img src="https://static.wixstatic.com/media/a6967f_a73e1ebd828441a987868435e350d047~mv2.webp" alt="ícone resolvido" style="width: 20px; height: 20px; margin-right: 6px;">-->
-    <div class="status-ball resolvido"></div>
-    <span id="resolvidos-count" style="margin-left: 6px;">0</span>
-  </div>
-</div>
 
   <div class="datetime" id="datetime"></div>
 </header>
@@ -305,7 +304,6 @@ td select {
       <label>data:
         <input type="date" id="filter-data-resumo" />
       </label>
-     
       <label>Status:
         <select id="filter-status-resumo">
           <option value="">Todos</option>
@@ -330,54 +328,50 @@ td select {
     </table>
   </section>
   
-<br>
-<div class="divider"></div>
-
-
- <section class="half" id="inputs">
-  <h2>Inputs</h2>
-  <div class="filters">
-    <label>ID:
-      <input type="text" id="filter-id-inputs" placeholder="Filtrar ID" />
-    </label>
-    <label>name:
-      <input type="text" id="filter-name-inputs" placeholder="Filtrar name" />
-    </label>
-    <label>RESUMO:
-      <input type="text" id="filter-resumo-inputs" placeholder="Filtrar RESUMO" />
-    </label>
-    <label>data:
-      <input type="date" id="filter-data-inputs" />
-    </label>
-   
-    <label>Status:
-      <select id="filter-status-inputs">
-        <option value="">Todos</option>
-        <option value="Aberto">Aberto</option>
-        <option value="Resolvido">Resolvido</option>
-      </select>
-    </label>
-    <label>contacto:
-      <input type="text" id="filter-contacto-inputs" placeholder="Filtrar contacto" />
-    </label>
-    <label>keyword:
-      <input type="text" id="filter-keyword-inputs" placeholder="Filtrar keyword" />
-    </label>
-    <label>ID_KEYWORD:
-      <input type="text" id="filter-id_keyword-inputs" placeholder="Filtrar ID_KEYWORD" />
-    </label>
-  </div>
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th><th>name</th><th>RESUMO</th><th>data</th><th>hora</th><th>status</th><th>contacto</th><th>keyword</th><th>ID_KEYWORD</th>
-      </tr>
-    </thead>
-    <tbody id="tbody-inputs"></tbody>
-  </table>
-</section>
-
- 
+  <br>
+  <div class="divider"></div>
+  
+  <section class="half" id="inputs">
+    <h2>Inputs</h2>
+    <div class="filters">
+      <label>ID:
+        <input type="text" id="filter-id-inputs" placeholder="Filtrar ID" />
+      </label>
+      <label>name:
+        <input type="text" id="filter-name-inputs" placeholder="Filtrar name" />
+      </label>
+      <label>RESUMO:
+        <input type="text" id="filter-resumo-inputs" placeholder="Filtrar RESUMO" />
+      </label>
+      <label>data:
+        <input type="date" id="filter-data-inputs" />
+      </label>
+      <label>Status:
+        <select id="filter-status-inputs">
+          <option value="">Todos</option>
+          <option value="Aberto">Aberto</option>
+          <option value="Resolvido">Resolvido</option>
+        </select>
+      </label>
+      <label>contacto:
+        <input type="text" id="filter-contacto-inputs" placeholder="Filtrar contacto" />
+      </label>
+      <label>keyword:
+        <input type="text" id="filter-keyword-inputs" placeholder="Filtrar keyword" />
+      </label>
+      <label>ID_KEYWORD:
+        <input type="text" id="filter-id_keyword-inputs" placeholder="Filtrar ID_KEYWORD" />
+      </label>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th><th>name</th><th>RESUMO</th><th>data</th><th>hora</th><th>status</th><th>contacto</th><th>keyword</th><th>ID_KEYWORD</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-inputs"></tbody>
+    </table>
+  </section>
 </div>
 
 
@@ -385,26 +379,6 @@ td select {
 const SHEET_ID = '1VWRHITYxqbnW2nwzfM9nO6w61LpWpySViy3FzOugOlE';
 const FOLHA3 = 'Folha3';
 const RESUMO_DIA = 'resumo_dia';
-
-function formatDateISO(dateObj) {
-  if (!dateObj) return '';
-  if (typeof dateObj === 'string') {
-    return dateObj;
-  }
-  if (typeof dateObj === 'object' && 'year' in dateObj && 'month' in dateObj && 'day' in dateObj) {
-    const y = dateObj.year;
-    const m = dateObj.month;
-    const d = dateObj.day;
-    return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-  }
-  if (dateObj instanceof Date) {
-    const y = dateObj.getFullYear();
-    const m = dateObj.getMonth() + 1;
-    const d = dateObj.getDate();
-    return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-  }
-  return dateObj;
-}
 
 function fetchSheet(sheetName) {
   const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
@@ -445,9 +419,10 @@ function fetchSheet(sheetName) {
 function renderResumo(data) {
   const tbody = document.getElementById('tbody-resumo');
   tbody.innerHTML = '';
-  data.forEach(row => {
-    const statusClass = row.status?.toLowerCase() === 'aberto' ? 'status-aberto' :
-                        row.status?.toLowerCase() === 'resolvido' ? 'status-resolvido' : '';
+  data.forEach((row, index) => {
+    // Linha real na planilha (cabeçalho + índice zero-based)
+    const linhaPlanilha = index + 2;
+
     tbody.innerHTML += `
       <tr>
         <td>${row.ID || ''}</td>
@@ -455,19 +430,53 @@ function renderResumo(data) {
         <td>${row.RESUMO || ''}</td>
         <td>${row.data || ''}</td>
         <td>${row.hora || ''}</td>
-        <td><span class="${statusClass}">${row.status || ''}</span></td>
+        <td>
+          <select class="status-select" data-linha="${linhaPlanilha}" data-index="${index}" data-table="resumo">
+            <option value="Aberto" ${row.status === 'Aberto' ? 'selected' : ''}>Aberto</option>
+            <option value="Resolvido" ${row.status === 'Resolvido' ? 'selected' : ''}>Resolvido</option>
+          </select>
+        </td>
         <td>${row.contacto || ''}</td>
         <td>${row.ID_KEYWORD || ''}</td>
       </tr>`;
   });
+
+  tbody.querySelectorAll('.status-select').forEach(select => {
+    select.addEventListener('change', e => {
+      const linha = parseInt(e.target.getAttribute('data-linha'));
+      const idx = parseInt(e.target.getAttribute('data-index'));
+      const value = e.target.value;
+
+      // Atualiza localmente
+      resumoDiaData[idx].status = value;
+      updateCounters();
+
+      // Envia para backend Google Apps Script
+      fetch('https://script.google.com/macros/s/AKfycbwVdPwHaTDcndGLoHrqZaDCB5aqJEqS1AWKZzhyoQmJSBFzRVTX8ODPmNzRhXgeFBfCyQ/exec', {
+        method: 'POST',
+        body: JSON.stringify({action: "update", linha: linha, status: value}),
+        headers: {'Content-Type': 'application/json'}
+      })
+      .then(res => res.text())
+      .then(text => {
+        if (text === "OK") {
+          console.log(`Status atualizado na linha ${linha}`);
+        } else {
+          console.error('Erro ao atualizar status:', text);
+        }
+      })
+      .catch(err => {
+        console.error('Erro na requisição:', err);
+      });
+    });
+  });
 }
+
 
 function renderInputs(data) {
   const tbody = document.getElementById('tbody-inputs');
   tbody.innerHTML = '';
-  data.forEach(row => {
-    const statusClass = row.status?.toLowerCase() === 'aberto' ? 'status-aberto' :
-                        row.status?.toLowerCase() === 'resolvido' ? 'status-resolvido' : '';
+  data.forEach((row, index) => {
     tbody.innerHTML += `
       <tr>
         <td>${row.ID || ''}</td>
@@ -475,17 +484,39 @@ function renderInputs(data) {
         <td>${row.RESUMO || ''}</td>
         <td>${row.data || ''}</td>
         <td>${row.hora || ''}</td>
-        <td><span class="${statusClass}">${row.status || ''}</span></td>
+        <td>
+          <select class="status-select" data-index="${index}" data-table="inputs">
+            <option value="Aberto" ${row.status === 'Aberto' ? 'selected' : ''}>Aberto</option>
+            <option value="Resolvido" ${row.status === 'Resolvido' ? 'selected' : ''}>Resolvido</option>
+          </select>
+        </td>
         <td>${row.contacto || ''}</td>
         <td>${row.keyword || ''}</td>
         <td>${row.ID_KEYWORD || ''}</td>
       </tr>`;
   });
+
+  tbody.querySelectorAll('.status-select').forEach(select => {
+    select.addEventListener('change', e => {
+      const idx = e.target.getAttribute('data-index');
+      const table = e.target.getAttribute('data-table');
+      const value = e.target.value;
+
+      if (table === 'inputs') {
+        folha3Data[idx].status = value;
+      }
+      // Aqui também pode adicionar código para salvar a alteração.
+    });
+  });
 }
 
-function updateCounters(data) {
-  const abertos = data.filter(r => r.status?.toLowerCase() === 'aberto').length;
-  const resolvidos = data.filter(r => r.status?.toLowerCase() === 'resolvido').length;
+
+
+
+function updateCounters() {
+  const abertos = resumoDiaData.filter(r => r.status?.toLowerCase() === 'aberto').length;
+  const resolvidos = resumoDiaData.filter(r => r.status?.toLowerCase() === 'resolvido').length;
+
   document.getElementById('abertos-count').textContent = abertos;
   document.getElementById('resolvidos-count').textContent = resolvidos;
 }
@@ -493,88 +524,107 @@ function updateCounters(data) {
 let folha3Data = [];
 let resumoDiaData = [];
 
-function applyFiltersResumo() {
-  const filtroStatusResumo = document.getElementById('filter-status-resumo').value.trim().toLowerCase();
-  const filtroID = document.getElementById('filter-id-resumo').value.trim().toLowerCase();
-  const filtroName = document.getElementById('filter-name-resumo').value.trim().toLowerCase();
-  const filtroResumo = document.getElementById('filter-resumo-resumo').value.trim().toLowerCase();
-  const filtroData = document.getElementById('filter-data-resumo').value;
-  const filtroContacto = document.getElementById('filter-contacto-resumo').value.trim().toLowerCase();
-  const filtroIDKeyword = document.getElementById('filter-id_keyword-resumo').value.trim().toLowerCase();
-
-  const resumoFiltrado = resumoDiaData.filter(r => {
-    if (filtroStatusResumo && r.status?.toLowerCase() !== filtroStatusResumo) return false;
-    if (filtroID && !String(r.ID || '').toLowerCase().includes(filtroID)) return false;
-    if (filtroName && !r.name?.toLowerCase().includes(filtroName)) return false;
-    if (filtroResumo && !r.RESUMO?.toLowerCase().includes(filtroResumo)) return false;
-    if (filtroData && r.data !== filtroData) return false;
-    if (filtroContacto && !r.contacto?.toLowerCase().includes(filtroContacto)) return false;
-    if (filtroIDKeyword && !r.ID_KEYWORD?.toLowerCase().includes(filtroIDKeyword)) return false;
+function filterData(data, filters) {
+  return data.filter(row => {
+    for (const key in filters) {
+      if (!filters[key]) continue;
+      const val = String(row[key] || '').toLowerCase();
+      const filterVal = filters[key].toLowerCase();
+      if (key === 'status') {
+        if (filterVal && val !== filterVal) return false;
+      } else if (!val.includes(filterVal)) {
+        return false;
+      }
+    }
     return true;
   });
+}
 
-  renderResumo(resumoFiltrado);
-  updateCounters(resumoFiltrado);
+function getResumoFilters() {
+  return {
+    ID: document.getElementById('filter-id-resumo').value.trim(),
+    name: document.getElementById('filter-name-resumo').value.trim(),
+    RESUMO: document.getElementById('filter-resumo-resumo').value.trim(),
+    data: document.getElementById('filter-data-resumo').value.trim(),
+    status: document.getElementById('filter-status-resumo').value.trim(),
+    contacto: document.getElementById('filter-contacto-resumo').value.trim(),
+    ID_KEYWORD: document.getElementById('filter-id_keyword-resumo').value.trim()
+  };
+}
+
+function getInputsFilters() {
+  return {
+    ID: document.getElementById('filter-id-inputs').value.trim(),
+    name: document.getElementById('filter-name-inputs').value.trim(),
+    RESUMO: document.getElementById('filter-resumo-inputs').value.trim(),
+    data: document.getElementById('filter-data-inputs').value.trim(),
+    status: document.getElementById('filter-status-inputs').value.trim(),
+    contacto: document.getElementById('filter-contacto-inputs').value.trim(),
+    keyword: document.getElementById('filter-keyword-inputs').value.trim(),
+    ID_KEYWORD: document.getElementById('filter-id_keyword-inputs').value.trim()
+  };
+}
+
+function applyFiltersResumo() {
+  const filters = getResumoFilters();
+  const filtered = filterData(resumoDiaData, filters);
+  renderResumo(filtered);
+  updateCounters();
 }
 
 function applyFiltersInputs() {
-  const filtroStatusInputs = document.getElementById('filter-status-inputs').value.trim().toLowerCase();
-  const filtroID = document.getElementById('filter-id-inputs').value.trim().toLowerCase();
-  const filtroName = document.getElementById('filter-name-inputs').value.trim().toLowerCase();
-  const filtroResumo = document.getElementById('filter-resumo-inputs').value.trim().toLowerCase();
-  const filtroData = document.getElementById('filter-data-inputs').value;
-  const filtroContacto = document.getElementById('filter-contacto-inputs').value.trim().toLowerCase();
-  const filtroKeyword = document.getElementById('filter-keyword-inputs').value.trim().toLowerCase();
-  const filtroIDKeyword = document.getElementById('filter-id_keyword-inputs').value.trim().toLowerCase();
-
-  const inputsFiltrado = folha3Data.filter(r => {
-    if (filtroStatusInputs && r.status?.toLowerCase() !== filtroStatusInputs) return false;
-    if (filtroID && !String(r.ID || '').toLowerCase().includes(filtroID)) return false;
-    if (filtroName && !r.name?.toLowerCase().includes(filtroName)) return false;
-    if (filtroResumo && !r.RESUMO?.toLowerCase().includes(filtroResumo)) return false;
-    if (filtroData && r.data !== filtroData) return false;
-    if (filtroContacto && !r.contacto?.toLowerCase().includes(filtroContacto)) return false;
-    if (filtroKeyword && !r.keyword?.toLowerCase().includes(filtroKeyword)) return false;
-    if (filtroIDKeyword && !r.ID_KEYWORD?.toLowerCase().includes(filtroIDKeyword)) return false;
-    return true;
-  });
-
-  renderInputs(inputsFiltrado);
+  const filters = getInputsFilters();
+  const filtered = filterData(folha3Data, filters);
+  renderInputs(filtered);
 }
 
-// Eventos dos filtros Resumo Dia
-[
-  'filter-status-resumo', 'filter-id-resumo', 'filter-name-resumo',
-  'filter-resumo-resumo', 'filter-data-resumo', 'filter-contacto-resumo',
-  'filter-id_keyword-resumo'
-].forEach(id => {
-  const el = document.getElementById(id);
-  if (el) el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', applyFiltersResumo);
-});
-
-// Eventos dos filtros Inputs
-[
-  'filter-status-inputs', 'filter-id-inputs', 'filter-name-inputs', 'filter-resumo-inputs',
-  'filter-data-inputs', 'filter-contacto-inputs', 'filter-keyword-inputs', 'filter-id_keyword-inputs'
-].forEach(id => {
-  const el = document.getElementById(id);
-  if (el) el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', applyFiltersInputs);
-});
-
-Promise.all([fetchSheet(FOLHA3), fetchSheet(RESUMO_DIA)])
-  .then(([dadosInputs, dadosResumo]) => {
-    folha3Data = dadosInputs;
-    resumoDiaData = dadosResumo;
-    applyFiltersResumo();
-    applyFiltersInputs();
-  });
-
+// Atualiza data e hora no header
 function updateDateTime() {
   const now = new Date();
-  document.getElementById('datetime').textContent = now.toLocaleString('pt-PT');
+  const options = { 
+    timeZone: 'Europe/Lisbon', 
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit' 
+  };
+  const dateTimeString = now.toLocaleString('pt-PT', options);
+  document.getElementById('datetime').textContent = dateTimeString;
 }
-updateDateTime();
-setInterval(updateDateTime, 1000);
+
+function addFilterListeners() {
+  // Inputs de texto no Resumo Dia -> escutam 'input'
+  const resumoTextFilters = document.querySelectorAll('#resumo-dia .filters input');
+  resumoTextFilters.forEach(input => input.addEventListener('input', applyFiltersResumo));
+
+  // Selects (dropdowns) no Resumo Dia -> escutam 'change'
+  const resumoSelectFilters = document.querySelectorAll('#resumo-dia .filters select');
+  resumoSelectFilters.forEach(select => select.addEventListener('change', applyFiltersResumo));
+
+  // Inputs de texto nos Inputs -> escutam 'input'
+  const inputsTextFilters = document.querySelectorAll('#inputs .filters input');
+  inputsTextFilters.forEach(input => input.addEventListener('input', applyFiltersInputs));
+
+  // Selects (dropdowns) nos Inputs -> escutam 'change'
+  const inputsSelectFilters = document.querySelectorAll('#inputs .filters select');
+  inputsSelectFilters.forEach(select => select.addEventListener('change', applyFiltersInputs));
+}
+
+
+// Inicializa o app
+async function init() {
+  [resumoDiaData, folha3Data] = await Promise.all([
+    fetchSheet(RESUMO_DIA),
+    fetchSheet(FOLHA3)
+  ]);
+  applyFiltersResumo();
+  applyFiltersInputs();
+  updateCounters();
+  updateDateTime();
+  setInterval(updateDateTime, 1000);
+  addFilterListeners();
+}
+
+init();
+
 
 setInterval(() => {
   location.reload();
