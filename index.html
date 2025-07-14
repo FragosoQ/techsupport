@@ -541,7 +541,33 @@ function renderResumo(data) {
   });
 }
 
+// Exemplo dos dados completos
+const dadosCompletos = [
+  /* seu array com os objetos da tabela */
+];
 
+// Função para filtrar e renderizar o resumo
+function applyFiltersResumo() {
+  const filtroStatus = document.getElementById('filter-status-resumo').value;
+
+  let dadosFiltrados;
+  if (filtroStatus === 'Todos') {
+    dadosFiltrados = dadosCompletos;
+  } else {
+    dadosFiltrados = dadosCompletos.filter(row => row.status === filtroStatus);
+  }
+
+  renderResumo(dadosFiltrados);
+}
+
+// Definir filtro padrão "Aberto" e aplicar filtro ao carregar
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('filter-status-resumo').value = 'Aberto';
+  applyFiltersResumo();
+
+  // Atualiza a tabela ao mudar o filtro
+  document.getElementById('filter-status-resumo').addEventListener('change', applyFiltersResumo);
+});
 
 function renderInputs(data) {
   const tbody = document.getElementById('tbody-inputs');
